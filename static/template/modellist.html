@@ -1,0 +1,42 @@
+{% extends "pages/page.html" %}
+{% load static gntm_tags imagekit %}
+
+{% block extra_css %}	
+	<style>
+	{% block css %}
+	{% endblock %}
+	</style>
+{% endblock %}
+
+{% block extra_js %}	
+	<script src="{% static 'js/gntm.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+{% if request.user|has_group:"gntm" %}
+	{% include "gntm/widget/status.html" %}
+	<div class="row">
+	{% for model in models %}
+	<div class="thumbnail col-md-3 col-sd-4 pull-left">
+	  <a href="{{request.path}}{{model.id}}/">
+	  <img src="{{model.thumbPath}}" width="250" height="200" alt="{{model.name}}">
+	  <div class="caption">
+		<h3 class="text-center">{{model.name}}</h3>
+		<div class="col-sm-4">
+			{% if model.owner %}
+			<img class="img-circle" width="50" height="50" src="{{model.owner.thumb}}">
+			{% endif %}
+		</div>
+		<div class="col-sm-8">
+			<h5>Aktienpreis: {{model.wert}}</h5>
+			<p>Gekaufte Aktien: {{model.aktien}}</p>
+		</div>
+	  </div>
+	  </a>
+	</div>
+	{% endfor %}	
+	</div>
+{% else %}
+	<div> Not Allowed, Gntm Group is missing </div>
+{% endif %}
+{% endblock %}
