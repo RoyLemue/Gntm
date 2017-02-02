@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<link rel="stylesheet" type="text/css"  href="theme/d3-tip.css"/>
+<link rel="stylesheet" type="text/css"  href="theme/StackedBarChart.css"/>
+<link rel="stylesheet" type="text/css"  href="theme/MultiLineChart.css"/>
+
+<p id="demo"></p>
+<svg id="svgMultiLineChart" width="50%" viewBox="0 0 1000 500" />
+<div id="StackedBarChart" width="50%" />
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="lib/d3-tip.js"></script>
+<script src="lib/d3-legend.js"></script>
+<script src="src/StackedBarChart.js"></script>
+<script src="src/MultiLineChart.js"></script>
+
+<script>
+  // global variable
+    tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-12, 0]);
+	var aStackedBarData = [
+	  {key: "Tom", data : {Kapital: 3840, Depotwert: 1920, Inaktiv: 960}},
+	  {key: "Roy", data : {Kapital: 1600, Depotwert: 1440, Inaktiv: 960}},
+	  {key: "Ralf", data : {Kapital:  640, Depotwert:  960, Inaktiv: 640}},
+	  {key: "Paul", data : {Kapital:  320, Depotwert:  480, Inaktiv: 640}}
+	];
+
+	var oStackedBarChart = new StackedBarChart("StackedBarChart", aStackedBarData);
+
+	var aMultiLineData = [{
+			key: "Büchse 1", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			},{
+				date: new Date(15),
+				val: 120
+			},{
+				date: new Date(18),
+				val: 80
+			},{
+				date: new Date(25),
+				val: 50
+			},{
+				date: new Date(32),
+				val: 75
+			}]
+		},{
+		key: "Büchse 2", data: [{
+				date: new Date(2),
+				val: 100
+			},{
+				date: new Date(5),
+				val: 110
+			},{
+				date: new Date(18),
+				val: 120
+			},{
+				date: new Date(20),
+				val: 80
+			},{
+				date: new Date(25),
+				val: 50
+			},{
+				date: new Date(40),
+				val: 75
+			}]
+		},{
+			key: "Büchse 3", data: [{
+				date: new Date(0),
+				val: 100
+			},{
+				date: new Date(2),
+				val: 110
+			},{
+				date: new Date(5),
+				val: 120
+			},{
+				date: new Date(12),
+				val: 80
+			},{
+				date: new Date(22),
+				val: 50
+			},{
+				date: new Date(35),
+				val: 75
+			}]
+		}];
+
+	var MultiLineChart = new MultiLineChart("svgMultiLineChart", aMultiLineData);
+
+</script> 
+
+</body>
+</html>

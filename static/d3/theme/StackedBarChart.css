@@ -1,0 +1,7 @@
+.stackedBar {
+	transition-duration: 0.5s;
+}
+
+.stackedBar.notHovered {
+	opacity: 0.6;
+}
