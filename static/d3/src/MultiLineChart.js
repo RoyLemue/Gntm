@@ -10,12 +10,14 @@
                       ]
                   }
 */
-function MultiLineChart(sSvgId, aData) {
-  var oSvg = d3.select("#" + sSvgId);
+function MultiLineChart(sParentId, aData) {
+  var VIEWBOX = [0, 0, 1000, 500];
 
-  var MARGIN = {top: 20, right: 80, bottom: 20, left: 80},
-      WIDTH = +oSvg.attr("width") - MARGIN.left - MARGIN.right,
-      HEIGHT = +oSvg.attr("height") - MARGIN.top - MARGIN.bottom;
+  var oSvg = d3.select("#" + sParentId).append("svg").attr("viewBox", VIEWBOX.join(" "));
+
+  var MARGIN = {top: 40, right: 150, bottom: 20, left: 80},
+      WIDTH = VIEWBOX[2] - MARGIN.left - MARGIN.right,
+      HEIGHT = VIEWBOX[3] - MARGIN.top - MARGIN.bottom;
 
   var dMinDate = d3.min(aData, function(d) { 
     return d3.min(d.data, function(d) {
@@ -23,13 +25,8 @@ function MultiLineChart(sSvgId, aData) {
     });
 
   });
-  var dMaxDate = d3.max(aData, function(d) { 
-    return d3.max(d.data, function(d) {
-      return d.date;
-    });
-
-  });
-  var fMaxValue = d3.max(aData, function(d) { 
+  var dMaxDate = new Date();
+  var fMaxValue = 1.1 * d3.max(aData, function(d) { 
     return d3.max(d.data, function(d) {
       return d.val;
     });
@@ -90,15 +87,14 @@ function MultiLineChart(sSvgId, aData) {
   aLines.append("path")
       .attr("class", "line")
       .attr("d", function(d) { return line(d.data); })
-      // .attr("data-legend",function(d) { return d.name})
+      .attr("data-legend",function(d) { return d.key})
       .style("stroke", function(d) { 
         return color(d.key); });
 
-  // aLines.append("text")
-  //     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-  //     .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
-  //     .attr("x", 3)
-  //     .attr("dy", ".35em")
-  //     .text(function(d) { return d.name; });
+  // add legend
+  var legend = g.append("g")
+    .attr("class","legend")
+    .attr("transform","translate(" + WIDTH + ",0)")
+    .call(d3.legend)
 
 }

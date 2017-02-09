@@ -3,16 +3,17 @@
  * @param {array} aData array containing objects of type 
                   {
                     "key" : sName,
+                    "id" : id of user,
                     "data" : { //map containing the data
                       key1 : value1, // arbitrary key and value
                       ...
                     }
                   }
 */
-function StackedBarChart(oParentId, aData) {
+function StackedBarChart(sParentId, aData) {
   var VIEWBOX = [0, 0, 1000, 500];
 
-  var oSvg = d3.select("#" + oParentId).append("svg").attr("viewBox", VIEWBOX.join(" "));
+  var oSvg = d3.select("#" + sParentId).append("svg").attr("viewBox", VIEWBOX.join(" "));
 
   var MARGIN = {top: 120, right: 80, bottom: 20, left: 80},
       WIDTH = VIEWBOX[2] - MARGIN.left - MARGIN.right,
@@ -29,9 +30,10 @@ function StackedBarChart(oParentId, aData) {
 
   var oStack = d3.stack().keys(Object.keys(aData[0].data));
   var aSeriesData = d3.transpose(oStack(aData.map(oData => oData.data)));
-  // add keys to data array
-  aSeriesData.forEach(function(aData, iIndex) {
-    aData.key = aKeys[iIndex];
+  // enhance series data
+  aSeriesData.forEach(function(aSeriesDataEntries, iIndex) {
+    aSeriesDataEntries.key = aData[iIndex].key;
+    aSeriesDataEntries.id = aData[iIndex].id;
   });
   // find max y
   var fY1Max = 1.1 * d3.max(aSeriesData, function(y) { return d3.max(y, function(d) { return d[1]; }); });
@@ -91,7 +93,9 @@ function StackedBarChart(oParentId, aData) {
     .on('mouseout', function() {
       series.classed("notHovered", false);
       tip.hide();
-    });
+    })
+    .append("a") // add hyperlinks for each player
+    .attr("xlink:href", function(d) {return "https://fography.de/gntm/users/" + d.id});
 
   // draw rects for each stacked bar
   var rect = series.selectAll("rect")
