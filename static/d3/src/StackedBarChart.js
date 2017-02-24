@@ -3,7 +3,7 @@
  * @param {array} aData array containing objects of type 
                   {
                     "key" : sName,
-                    "id" : id of user,
+                    "link" : web link to the detail page,
                     "data" : { //map containing the data
                       key1 : value1, // arbitrary key and value
                       ...
@@ -33,19 +33,10 @@ function StackedBarChart(sParentId, aData) {
   // enhance series data
   aSeriesData.forEach(function(aSeriesDataEntries, iIndex) {
     aSeriesDataEntries.key = aData[iIndex].key;
-    aSeriesDataEntries.id = aData[iIndex].id;
+    aSeriesDataEntries.link = aData[iIndex].link;
   });
   // find max y
   var fY1Max = 1.1 * d3.max(aSeriesData, function(y) { return d3.max(y, function(d) { return d[1]; }); });
-
-  // set tooltip layout
-  tip.html(function(d) { 
-    var oData = d[0].data;
-    var sHtml = "<div class = 'title' >" + d.key + '</div>' + "<hr>" ;
-    Object.keys(oData).forEach(function(sKey) {
-      sHtml = sHtml + "<span class = 'key'>" + sKey + ": </span>" + oData[sKey] + "<br>";
-    });
-    return sHtml })
 
   g.call(tip);
 
@@ -88,14 +79,28 @@ function StackedBarChart(sParentId, aData) {
       series.classed("notHovered", function() {
         return that !== this;
       });
+
+      // set tooltip layout
+      tip.html(function(d) { 
+        var oData = d[0].data;
+        var sHtml = "<div class = 'title' >" + d.key + '</div>' + "<hr>" ;
+        Object.keys(oData).forEach(function(sKey) {
+          sHtml = sHtml + "<span class = 'key'>" + sKey + ": </span>" + oData[sKey] + "<br>";
+        });
+        return sHtml 
+      });
+
       tip.show(d, this);
     })
     .on('mouseout', function() {
       series.classed("notHovered", false);
       tip.hide();
     })
-    .append("a") // add hyperlinks for each player
-    .attr("xlink:href", function(d) {return "https://fography.de/gntm/users/" + d.id});
+    .on("dblclick", function(d) {
+      if (d.link) {
+        window.location = d.link;
+      }
+    });
 
   // draw rects for each stacked bar
   var rect = series.selectAll("rect")
@@ -109,6 +114,6 @@ function StackedBarChart(sParentId, aData) {
     .attr("y", function(d) { 
       return y(d[1]); })
     .attr("width", x.bandwidth())
-    .attr("height", function(d) { return y(d[0]) - y(d[1]); })  ;
+    .attr("height", function(d) { return y(d[0]) - y(d[1]); });
 
 }

@@ -1,16 +1,17 @@
 /**
  * @param {string} sSvgId the id of the svg
  * @param {array} aData array containing objects of type 
-                  {
-                    "key" : sName,
-                    "data" : [{
-                      "date" : date,
-                      "val": value},
-                      ...
-                      ]
-                  }
+ *                 {
+ *                   "key" : sName,
+ *                   "data" : [{
+ *                     "date" : date,
+ *                     "val": value},
+ *                     ...
+ *                     ]
+ *                 }
+ * @param {Float} [fYMin=10] minimal y-axis value
 */
-function MultiLineChart(sParentId, aData) {
+function MultiLineChart(sParentId, aData, fYMin) {
   var VIEWBOX = [0, 0, 1000, 500];
 
   var oSvg = d3.select("#" + sParentId).append("svg").attr("viewBox", VIEWBOX.join(" "));
@@ -43,8 +44,11 @@ function MultiLineChart(sParentId, aData) {
     .domain([dMinDate, dMaxDate])
     .range([0, WIDTH]);
 
+  if (!fYMin) {
+    fYMin = 10;
+  }
   var y = d3.scaleLinear()
-    .domain([0, fMaxValue])
+    .domain([fYMin, fMaxValue])
     .range([HEIGHT, 0]);
 
   var color = d3.scaleOrdinal()
@@ -57,6 +61,8 @@ function MultiLineChart(sParentId, aData) {
   var line = d3.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.val); });
+
+  g.call(tip);
 
   // add axes
   g.append("g")
@@ -73,15 +79,25 @@ function MultiLineChart(sParentId, aData) {
       .data(aData)
       .enter().append("g")
       .attr("class", "lineContainer")      
-      .on('mouseover', function() {
+      .on('mouseover', function(d) {
         var that = this;
         aLines.classed("notHovered", function() {
           return that !== this;
         });
+
+        // set tooltip layout
+        tip.html(function(d) { 
+          var sHtml = "<span class = 'title' >" + d.key + '</span>' + "<hr>" ;
+          sHtml = sHtml + "<span class = 'key'>Wert: </span>" + d.data[d.data.length - 1].val;
+          return sHtml 
+        });
+
+        tip.show(d, this);
       })     
       .on('mouseout', function() {
         var that = this;
         aLines.classed("notHovered", false);
+        tip.hide();
       });
 
   aLines.append("path")
