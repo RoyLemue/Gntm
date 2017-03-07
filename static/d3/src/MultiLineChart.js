@@ -108,9 +108,9 @@ function MultiLineChart(sParentId, aData, fYMin) {
         return color(d.key); });
 
   // add legend
-  var legend = g.append("g")
+  var legend = oSvg.append("g")
     .attr("class","legend")
-    .attr("transform","translate(" + WIDTH + ",0)")
+    .attr("transform","translate(" + (MARGIN.left + WIDTH) + ",0)")
     .call(d3.legend)
 
 }
