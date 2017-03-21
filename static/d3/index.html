@@ -2,17 +2,21 @@
 <html>
 <body>
 
+<link rel="stylesheet" type="text/css"  href="theme/common.css"/>
 <link rel="stylesheet" type="text/css"  href="theme/d3-tip.css"/>
+<link rel="stylesheet" type="text/css"  href="theme/d3-legend.css"/>
+<link rel="stylesheet" type="text/css"  href="theme/d3.button.css"/>
 <link rel="stylesheet" type="text/css"  href="theme/StackedBarChart.css"/>
 <link rel="stylesheet" type="text/css"  href="theme/MultiLineChart.css"/>
 
 <p id="demo"></p>
-<svg id="svgMultiLineChart" width="50%" viewBox="0 0 1000 500" />
-<div id="StackedBarChart" width="50%" />
+<div id="MultiLineChart" style="width: 50%"></div>
+<div id="StackedBarChart" style="width: 50%" ></div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="lib/d3-tip.js"></script>
 <script src="lib/d3-legend.js"></script>
+<script src="lib/d3.button.js"></script>
 <script src="src/StackedBarChart.js"></script>
 <script src="src/MultiLineChart.js"></script>
 
@@ -22,16 +26,16 @@
       .attr('class', 'd3-tip')
       .offset([-12, 0]);
 	var aStackedBarData = [
-	  {key: "Tom", data : {Kapital: 3840, Depotwert: 1920, Inaktiv: 960}},
-	  {key: "Roy", data : {Kapital: 1600, Depotwert: 1440, Inaktiv: 960}},
-	  {key: "Ralf", data : {Kapital:  640, Depotwert:  960, Inaktiv: 640}},
-	  {key: "Paul", data : {Kapital:  320, Depotwert:  480, Inaktiv: 640}}
+	  {key: "Tom", link:"https://fography.de/gntm/users/1", data : {Kapital: 3840, Depotwert: 1920, Inaktiv: 960}},
+	  {key: "Roy", link: "https://fography.de/gntm/users/2", data : {Kapital: 1600, Depotwert: 1440, Inaktiv: 960}},
+	  {key: "Ralf", link:"https://fography.de/gntm/users/3", data : {Kapital:  640, Depotwert:  960, Inaktiv: 640}},
+	  {key: "Paul", link:"https://fography.de/gntm/users/4", data : {Kapital:  320, Depotwert:  480, Inaktiv: 640}}
 	];
 
 	var oStackedBarChart = new StackedBarChart("StackedBarChart", aStackedBarData);
 
 	var aMultiLineData = [{
-			key: "Büchse 1", data: [{
+			key: "Buechse 1", data: [{
 				date: new Date(1),
 				val: 100
 			},{
@@ -47,11 +51,29 @@
 				date: new Date(25),
 				val: 50
 			},{
-				date: new Date(32),
+				date: new Date() - 1500*60*1000,
+				val: 54
+			},{
+				date: new Date() - 1000*60*1000,
+				val: 65
+			},{
+				date: new Date() - 150*60*1000,
+				val: 83
+			},{
+				date: new Date() - 100*60*1000,
+				val: 101
+			},{
+				date: new Date() - 20*60*1000,
+				val: 40
+			},{
+				date: new Date() - 10*60*1000,
+				val: 72
+			},{
+				date: new Date(),
 				val: 75
 			}]
 		},{
-		key: "Büchse 2", data: [{
+		key: "Buechse 2", data: [{
 				date: new Date(2),
 				val: 100
 			},{
@@ -71,7 +93,7 @@
 				val: 75
 			}]
 		},{
-			key: "Büchse 3", data: [{
+			key: "Buechse 3", data: [{
 				date: new Date(0),
 				val: 100
 			},{
@@ -90,9 +112,137 @@
 				date: new Date(35),
 				val: 75
 			}]
+		},{
+			key: "gxfdöer", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "cx 1", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 1", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 12", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 13", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 14", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 15", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 16", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 17", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 18", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 19", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 10", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 112", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 113", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 1114", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
+		},{
+			key: "abudas 115", data: [{
+				date: new Date(1),
+				val: 100
+			},{
+				date: new Date(10),
+				val: 110
+			}]
 		}];
 
-	var MultiLineChart = new MultiLineChart("svgMultiLineChart", aMultiLineData);
+	var MultiLineChart = new MultiLineChart("MultiLineChart", aMultiLineData);
 
 </script> 
 

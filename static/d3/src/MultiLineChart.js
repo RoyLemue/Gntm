@@ -27,11 +27,7 @@ function MultiLineChart(sParentId, aData, fYMin) {
 
   });
   var dMaxDate = new Date();
-  var fMaxValue = 1.1 * d3.max(aData, function(d) { 
-    return d3.max(d.data, function(d) {
-      return d.val;
-    });
-  });
+  var fMaxValue = calcYMax(aData);
 
 
   oSvg.attr("class", "multiLineChartContainer");
@@ -74,6 +70,14 @@ function MultiLineChart(sParentId, aData, fYMin) {
       .attr("class", "y axis")
       .call(yAxis);
 
+  g.append("clipPath")       // define a clip path
+    .attr("id", "canvas-clip") // give the clipPath an ID
+    .append("rect")          // shape it as an ellipse
+    .attr("x", 0)         // position the x-centre
+    .attr("y", 0)         // position the y-centre
+    .attr("height", HEIGHT)         // set the x radius
+    .attr("width", WIDTH);         // set the y radius
+
   // add
   var aLines = g.selectAll(".lineContainer")
       .data(aData)
@@ -102,6 +106,7 @@ function MultiLineChart(sParentId, aData, fYMin) {
 
   aLines.append("path")
       .attr("class", "line")
+      .attr("clip-path", "url(#canvas-clip)") // clip the path
       .attr("d", function(d) { return line(d.data); })
       .attr("data-legend",function(d) { return d.key})
       .style("stroke", function(d) { 
@@ -110,7 +115,70 @@ function MultiLineChart(sParentId, aData, fYMin) {
   // add legend
   var legend = oSvg.append("g")
     .attr("class","legend")
-    .attr("transform","translate(" + (MARGIN.left + WIDTH) + ",0)")
-    .call(d3.legend)
+    .attr("transform","translate(" + (MARGIN.left + WIDTH + 30) + ",0)")
+    .call(d3.legend);
+
+  // add time axis buttons
+  var aButtonData = [{label: "15M", x: WIDTH / 2 - 200, y: MARGIN.top / 4, timeOffset : 15 * 60 * 1000 },
+            {label: "1H", x: WIDTH / 2 - 100, y: MARGIN.top / 4, timeOffset : 60 * 60 * 1000 },
+            {label: "24H", x: WIDTH / 2, y: MARGIN.top / 4, timeOffset : 24 * 60 * 60 * 1000 },
+            {label: "1W", x: WIDTH / 2 + 100, y: MARGIN.top / 4, timeOffset : 7 * 24 * 60 * 60 * 1000  },
+            {label: "ALL", x: WIDTH / 2 + 200, y: MARGIN.top / 4, timeOffset : -1 }];
+
+  var button = d3.button()
+    .on('press', function(d, i) { 
+      clearAll();      
+      var dXMin = d.timeOffset > 0 ? dMaxDate - d.timeOffset : dMinDate;
+      updateXMin(dXMin);
+    });
+
+  // Add buttons
+  var buttons = g.selectAll('.button')
+      .data(aButtonData)
+      .enter()
+      .append('g')
+      .attr('class', 'button')
+      .call(button);
+
+  function clearAll() {
+    buttons.selectAll('rect')
+        .each(function(d, i) { button.clear.call(this, d, i) });
+  }
+
+
+  function updateXMin(dXMin) {
+     // create a deep copy of data and filter for the new key value pairs
+    var aFilteredData = aData.map(function(oData) {
+      var aFilteredDatePairs = oData.data.filter(function(oPair) {
+        return oPair.date >= dXMin;
+      });
+      return {
+        key : oData.key,
+        data : aFilteredDatePairs
+      };
+    });
+
+    // Scale the range of the data again 
+    x.domain([dXMin, dMaxDate]);
+    y.domain([fYMin, calcYMax(aFilteredData)]);
+
+    // // Make the changes
+    aLines.selectAll(".line")   // change the line
+       .attr("d", function(d) {
+        return line(d.data);
+       });
+    g.select(".x.axis") // change the x axis
+       .call(xAxis);
+    g.select(".y.axis") // change the y axis
+       .call(yAxis);
+  };
+
+  function calcYMax(aData) {
+    return 1.1 * d3.max(aData, function(d) { 
+      return d3.max(d.data, function(d) {
+        return d.val;
+      });
+    });
+  }
 
 }
