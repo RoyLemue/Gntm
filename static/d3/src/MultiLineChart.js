@@ -115,7 +115,7 @@ function MultiLineChart(sParentId, aData, fYMin) {
   // add legend
   var legend = oSvg.append("g")
     .attr("class","legend")
-    .attr("transform","translate(" + (MARGIN.left + WIDTH + 30) + ",0)")
+    .attr("transform","translate(" + (MARGIN.left + WIDTH + 30) + ",30)")
     .call(d3.legend);
 
   // add time axis buttons
