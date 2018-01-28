@@ -16,5 +16,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         GntmTransaction.objects.all().delete()
         for u in GntmUser.objects.all():
-            u.Money = 1200.0;
+            u.money := 1000.0;
             u.save()
